@@ -1,0 +1,170 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>➕ Nouvel Employé</h1>
+    <p>Ajouter un nouveau membre à l'équipe</p>
+  </div>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="employee-form">
+    <!-- Informations de base -->
+    <div class="form-section">
+      <h2>Informations de Base</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="matricule">Matricule *</label>
+          <input
+            id="matricule"
+            type="text"
+            formControlName="matricule"
+            class="form-control"
+            readonly
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="fullName">Nom Complet *</label>
+          <input
+            id="fullName"
+            type="text"
+            formControlName="fullName"
+            class="form-control"
+            placeholder="Prénom Nom"
+          />
+          <div class="error" *ngIf="employeeForm.get('fullName')?.invalid && employeeForm.get('fullName')?.touched">
+            Le nom complet est requis (min 3 caractères)
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email Professionnel *</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="nom.prenom@mairie-tunis.tn"
+          />
+          <div class="error" *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+            Email valide requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Téléphone *</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            class="form-control"
+            placeholder="+216 XX XXX XXX"
+          />
+          <div class="error" *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched">
+            Le téléphone est requis
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informations professionnelles -->
+    <div class="form-section">
+      <h2>Informations Professionnelles</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">Département *</label>
+          <select
+            id="department"
+            formControlName="department"
+            class="form-control"
+          >
+            <option value="">-- Sélectionnez un département --</option>
+            <option *ngFor="let dept of departments" [value]="dept.value">
+              {{ dept.label }}
+            </option>
+          </select>
+          <div class="error" *ngIf="employeeForm.get('department')?.invalid && employeeForm.get('department')?.touched">
+            Le département est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="position">Poste *</label>
+          <select
+            id="position"
+            formControlName="position"
+            class="form-control"
+          >
+            <option value="">-- Sélectionnez un poste --</option>
+            <option *ngFor="let pos of positions" [value]="pos.value">
+              {{ pos.label }}
+            </option>
+          </select>
+          <div class="error" *ngIf="employeeForm.get('position')?.invalid && employeeForm.get('position')?.touched">
+            Le poste est requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hireDate">Date d'Embauche *</label>
+          <input
+            id="hireDate"
+            type="date"
+            formControlName="hireDate"
+            class="form-control"
+          />
+          <div class="error" *ngIf="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+            La date d'embauche est requise
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="salary">Salaire (TND) *</label>
+          <input
+            id="salary"
+            type="number"
+            formControlName="salary"
+            class="form-control"
+            placeholder="1500.00"
+          />
+          <div class="error" *ngIf="employeeForm.get('salary')?.invalid && employeeForm.get('salary')?.touched">
+            Le salaire est requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Statut *</label>
+        <select
+          id="status"
+          formControlName="status"
+          class="form-control"
+        >
+          <option value="ACTIVE">Actif</option>
+          <option value="ON_LEAVE">En congé</option>
+          <option value="SUSPENDED">Suspendu</option>
+          <option value="TERMINATED">Terminé</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Message de succès/erreur -->
+    <div class="message" [class.success]="success" [class.error]="!success" *ngIf="message">
+      {{ message }}
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="form-actions">
+      <button type="button" (click)="cancel()" class="btn btn-secondary" [disabled]="loading">
+        Annuler
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading || employeeForm.invalid">
+        <span *ngIf="!loading">💾 Enregistrer l'Employé</span>
+        <span *ngIf="loading">Enregistrement en cours...</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,64 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Gestion des Employés</h1>
+      <p>{{ filteredEmployees.length }} employé(s)</p>
+    </div>
+    <button routerLink="/dashboard/hr/employees/new" class="btn btn-primary">
+      + Nouvel Employé
+    </button>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (ngModelChange)="filterEmployees()"
+      placeholder="Rechercher par nom ou matricule..."
+      class="search-input"
+    />
+    
+    <select [(ngModel)]="filterStatus" (ngModelChange)="filterEmployees()" class="filter-select">
+      <option value="">Tous les statuts</option>
+      <option value="ACTIVE">Actif</option>
+      <option value="INACTIVE">Inactif</option>
+      <option value="ON_LEAVE">En congé</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Matricule</th>
+          <th>Nom Complet</th>
+          <th>Email</th>
+          <th>Département</th>
+          <th>Poste</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of filteredEmployees">
+          <td>{{ employee.matricule }}</td>
+          <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.department }}</td>
+          <td>{{ employee.position }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + employee.status.toLowerCase()">
+              {{ employee.status }}
+            </span>
+          </td>
+          <td class="actions">
+            <button (click)="viewEmployee(employee.id)" class="btn-icon" title="Voir">👁️</button>
+            <button (click)="deleteEmployee(employee.id)" class="btn-icon" title="Supprimer">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+<div class="page-container">
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div *ngIf="!loading && claim">
+    <!-- Header avec retour -->
+    <div class="page-header">
+      <button (click)="goBack()" class="btn-back">← Retour</button>
+      <div>
+        <h1>Réclamation #{{ claim.id }}</h1>
+        <p>Créée le {{ claim.createdAt | date: 'dd/MM/yyyy à HH:mm' }}</p>
+      </div>
+    </div>
+
+    <!-- Informations principales -->
+    <div class="claim-info-card">
+      <div class="claim-header">
+        <div class="claim-title">
+          <h2>{{ claim.subject }}</h2>
+          <div class="claim-meta">
+            <span class="badge" [style.background-color]="getStatusColor(claim.status)">
+              {{ getStatusLabel(claim.status) }}
+            </span>
+            <span class="priority-badge">
+              {{ getPriorityIcon(claim.priority) }} {{ claim.priority }}
+            </span>
+            <span class="category-badge">
+              {{ getCategoryLabel(claim.category) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions CHIEF/ADMIN -->
+        <div class="claim-actions" *ngIf="canAcceptReject() && claim.status === 'NEW'">
+          <button 
+            (click)="acceptClaim()" 
+            class="btn btn-success"
+            [disabled]="updatingStatus"
+          >
+            ✅ Accepter
+          </button>
+          <button 
+            (click)="rejectClaim()" 
+            class="btn btn-danger"
+            [disabled]="updatingStatus"
+          >
+            ❌ Refuser
+          </button>
+        </div>
+      </div>
+
+      <!-- Informations du citoyen -->
+      <div class="info-section">
+        <h3>👤 Informations du Citoyen</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nom:</span>
+            <span class="info-value">{{ claim.citizenName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{{ claim.citizenEmail }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Téléphone:</span>
+            <span class="info-value">{{ claim.citizenPhone }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Adresse:</span>
+            <span class="info-value">{{ claim.address }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="info-section">
+        <h3>📄 Description</h3>
+        <p class="description">{{ claim.description }}</p>
+      </div>
+
+      <!-- Agent assigné -->
+      <div class="info-section" *ngIf="claim.assignedTo">
+        <h3>👨‍💼 Agent Assigné</h3>
+        <p>{{ claim.assignedTo }}</p>
+      </div>
+
+      <!-- Résolution -->
+      <div class="info-section" *ngIf="claim.resolution">
+        <h3>✅ Résolution</h3>
+        <p class="resolution">{{ claim.resolution }}</p>
+        <p class="resolution-date" *ngIf="claim.resolvedAt">
+          Résolue le {{ claim.resolvedAt | date: 'dd/MM/yyyy à HH:mm' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Changer le statut (AGENT/CHIEF/ADMIN) -->
+    <div class="status-change-card" *ngIf="canChangeStatus() && claim.status !== 'CLOSED'">
+      <h3>🔄 Changer le Statut</h3>
+      <div class="status-buttons">
+        <button 
+          *ngFor="let status of statusOptions"
+          (click)="changeStatus(status.value)"
+          class="btn-status"
+          [class.active]="claim.status === status.value"
+          [style.border-color]="status.color"
+          [disabled]="updatingStatus || claim.status === status.value"
+        >
+          {{ status.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Commentaires et Réponses -->
+    <div class="comments-card">
+      <h3>💬 Historique et Commentaires</h3>
+      
+      <!-- Liste des commentaires -->
+      <div class="comments-list">
+        <div class="comment" *ngFor="let comment of comments">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.author }}</span>
+            <span class="comment-date">{{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <p class="comment-text">{{ comment.comment }}</p>
+        </div>
+
+        <div class="no-comments" *ngIf="comments.length === 0">
+          Aucun commentaire pour le moment
+        </div>
+      </div>
+
+      <!-- Ajouter un commentaire (AGENT/CHIEF/ADMIN) -->
+      <div class="add-comment" *ngIf="canRespond()">
+        <h4>✍️ Ajouter une Réponse</h4>
+        <textarea
+          [(ngModel)]="newComment"
+          placeholder="Écrivez votre réponse au citoyen..."
+          rows="4"
+          class="comment-input"
+        ></textarea>
+        <button 
+          (click)="addComment()" 
+          class="btn btn-primary"
+          [disabled]="!newComment.trim() || addingComment"
+        >
+          <span *ngIf="!addingComment">📤 Envoyer la Réponse</span>
+          <span *ngIf="addingComment">Envoi en cours...</span>
+        </button>
+      </div>
+
+      <!-- Message pour CITIZEN -->
+      <div class="citizen-info" *ngIf="isCitizen()">
+        <p>💡 Vous pouvez suivre l'évolution de votre réclamation ici. Les agents vous répondront dans cette section.</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !claim" class="error-message">
+    <h2>Réclamation non trouvée</h2>
+    <button (click)="goBack()" class="btn btn-primary">Retour à la liste</button>
+  </div>
+</div>

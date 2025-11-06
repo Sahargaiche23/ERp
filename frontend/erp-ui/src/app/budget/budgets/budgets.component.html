@@ -1,0 +1,59 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Gestion des Budgets</h1>
+      <p>{{ budgets.length }} budget(s)</p>
+    </div>
+    <button routerLink="/dashboard/budget/budgets/new" class="btn btn-primary">
+      + Nouveau Budget
+    </button>
+  </div>
+
+  <div class="filters">
+    <label>Année:</label>
+    <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()" class="filter-select">
+      <option [value]="2024">2024</option>
+      <option [value]="2025">2025</option>
+      <option [value]="2026">2026</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="budget-grid" *ngIf="!loading">
+    <div class="budget-card" *ngFor="let budget of budgets">
+      <div class="budget-header">
+        <h3>{{ budget.department }}</h3>
+        <span class="status-badge" [class]="'status-' + budget.status.toLowerCase()">
+          {{ budget.status }}
+        </span>
+      </div>
+      
+      <div class="budget-details">
+        <div class="detail-row">
+          <span>Budget Alloué:</span>
+          <strong>{{ budget.totalAllocated | number }}€</strong>
+        </div>
+        <div class="detail-row">
+          <span>Dépensé:</span>
+          <strong class="spent">{{ budget.totalSpent | number }}€</strong>
+        </div>
+        <div class="detail-row">
+          <span>Restant:</span>
+          <strong class="remaining">{{ budget.remaining | number }}€</strong>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="getProgressPercent(budget)"></div>
+      </div>
+      <div class="progress-label">{{ getProgressPercent(budget) | number: '1.0-0' }}% utilisé</div>
+
+      <div class="budget-actions">
+        <button [routerLink]="['/dashboard/budget/budgets', budget.id]" class="btn btn-sm">
+          Voir Détails
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

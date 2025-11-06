@@ -1,0 +1,57 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Gestion des Congés</h1>
+      <p>{{ filteredLeaves.length }} demande(s)</p>
+    </div>
+    <button routerLink="/dashboard/hr/leaves/new" class="btn btn-primary">
+      + Nouvelle Demande
+    </button>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="filterStatus" (ngModelChange)="filterLeaves()" class="filter-select">
+      <option value="">Tous les statuts</option>
+      <option value="PENDING">En attente</option>
+      <option value="APPROVED">Approuvé</option>
+      <option value="REJECTED">Rejeté</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th>Type</th>
+          <th>Date Début</th>
+          <th>Date Fin</th>
+          <th>Jours</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let leave of filteredLeaves">
+          <td>{{ leave.employeeName }}</td>
+          <td>{{ leave.type }}</td>
+          <td>{{ leave.startDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ leave.endDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ leave.days }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + leave.status.toLowerCase()">
+              {{ leave.status }}
+            </span>
+          </td>
+          <td class="actions" *ngIf="leave.status === 'PENDING'">
+            <button (click)="approveLeave(leave.id)" class="btn btn-success btn-sm">✓ Approuver</button>
+            <button (click)="rejectLeave(leave.id)" class="btn btn-danger btn-sm">✗ Rejeter</button>
+          </td>
+          <td *ngIf="leave.status !== 'PENDING'">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

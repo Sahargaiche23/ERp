@@ -1,0 +1,235 @@
+<div class="page-container">
+  <!-- Header dynamique selon le rôle -->
+  <div class="page-header">
+    <h1 *ngIf="isCitizen()">🏠 Tableau de Bord Citoyen</h1>
+    <h1 *ngIf="isAgent()">🛠️ Tableau de Bord Agent</h1>
+    <h1 *ngIf="isChief()">👔 Tableau de Bord Chef de Service</h1>
+    <h1 *ngIf="isAdmin()">⚙️ Tableau de Bord Administrateur</h1>
+    <p *ngIf="currentUser">Bienvenue, {{ currentUser.fullName || currentUser.username }}</p>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <!-- ==================== DASHBOARD CITIZEN ==================== -->
+  <div *ngIf="isCitizen() && !loading">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-content">
+          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <p>Mes Réclamations en cours</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <p>Réclamations résolues</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-content">
+          <h3>3</h3>
+          <p>Notifications</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Actions Rapides</h2>
+      <div class="actions-grid">
+        <button routerLink="/dashboard/claims/new" class="action-btn">
+          <span class="icon">📝</span>
+          <span>Nouvelle Réclamation</span>
+        </button>
+        <button routerLink="/dashboard/claims" class="action-btn">
+          <span class="icon">👀</span>
+          <span>Voir Mes Réclamations</span>
+        </button>
+        <button routerLink="/dashboard/home" class="action-btn">
+          <span class="icon">📜</span>
+          <span>Historique</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD AGENT ==================== -->
+  <div *ngIf="isAgent() && !loading">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <p>Réclamations Assignées</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <p>Réclamations Traitées</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-content">
+          <h3>5</h3>
+          <p>Tâches en cours</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>92%</h3>
+          <p>Taux de Résolution</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Actions Rapides</h2>
+      <div class="actions-grid">
+        <button routerLink="/dashboard/claims" class="action-btn">
+          <span class="icon">📋</span>
+          <span>Voir Réclamations</span>
+        </button>
+        <button routerLink="/dashboard/claims" class="action-btn">
+          <span class="icon">✅</span>
+          <span>Mes Tâches</span>
+        </button>
+        <button routerLink="/dashboard/home" class="action-btn">
+          <span class="icon">📝</span>
+          <span>Ajouter Commentaire</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD CHIEF ==================== -->
+  <div *ngIf="isChief() && !loading">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <p>Réclamations en cours</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ stats?.totalEmployees || 0 }}</h3>
+          <p>Agents dans l'équipe</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-content">
+          <h3>85%</h3>
+          <p>Performance Équipe</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <p>Réclamations Résolues</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Actions Rapides</h2>
+      <div class="actions-grid">
+        <button routerLink="/dashboard/claims" class="action-btn">
+          <span class="icon">📋</span>
+          <span>Assigner Réclamation</span>
+        </button>
+        <button routerLink="/dashboard/hr" class="action-btn">
+          <span class="icon">👥</span>
+          <span>Gérer Équipe</span>
+        </button>
+        <button routerLink="/dashboard/reports" class="action-btn">
+          <span class="icon">📊</span>
+          <span>Générer Rapport</span>
+        </button>
+        <button routerLink="/dashboard/home" class="action-btn">
+          <span class="icon">✅</span>
+          <span>Valider Résolutions</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ADMIN ==================== -->
+  <div *ngIf="isAdmin() && !loading">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ stats?.totalEmployees || 0 }}</h3>
+          <p>Utilisateurs Total</p>
+          <span class="stat-detail">{{ stats?.activeEmployees || 0 }} actifs</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <h3>{{ stats?.totalBudget | number }}€</h3>
+          <p>Budget Total</p>
+          <span class="stat-detail">{{ stats?.spentBudget | number }}€ dépensé</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-content">
+          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <p>Réclamations en cours</p>
+          <span class="stat-detail">{{ stats?.resolvedClaims || 0 }} résolues</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏗️</div>
+        <div class="stat-content">
+          <h3>{{ stats?.activeProjects || 0 }}</h3>
+          <p>Projets Actifs</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>95%</h3>
+          <p>Performance Globale</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Actions Rapides</h2>
+      <div class="actions-grid">
+        <button routerLink="/dashboard/hr/employees/new" class="action-btn">
+          <span class="icon">➕</span>
+          <span>Nouvel Employé</span>
+        </button>
+        <button routerLink="/dashboard/budget/budgets/new" class="action-btn">
+          <span class="icon">💰</span>
+          <span>Nouveau Budget</span>
+        </button>
+        <button routerLink="/dashboard/reports" class="action-btn">
+          <span class="icon">📊</span>
+          <span>Rapports Globaux</span>
+        </button>
+        <button routerLink="/dashboard/home" class="action-btn">
+          <span class="icon">⚙️</span>
+          <span>Configuration</span>
+        </button>
+        <button routerLink="/dashboard/home" class="action-btn">
+          <span class="icon">📋</span>
+          <span>Logs & Audit</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

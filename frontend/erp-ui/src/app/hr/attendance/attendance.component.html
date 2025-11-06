@@ -1,0 +1,46 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Pointage</h1>
+  </div>
+
+  <div class="date-filter">
+    <label>Date:</label>
+    <input 
+      type="date" 
+      [(ngModel)]="selectedDate" 
+      (ngModelChange)="onDateChange()"
+      class="date-input"
+    />
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th>Date</th>
+          <th>Entrée</th>
+          <th>Sortie</th>
+          <th>Heures</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let att of attendances">
+          <td>{{ att.employeeName }}</td>
+          <td>{{ att.date | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ att.checkIn | date: 'HH:mm' }}</td>
+          <td>{{ att.checkOut | date: 'HH:mm' }}</td>
+          <td>{{ att.hoursWorked }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + att.status.toLowerCase()">
+              {{ att.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

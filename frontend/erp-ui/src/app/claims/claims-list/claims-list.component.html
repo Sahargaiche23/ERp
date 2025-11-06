@@ -1,0 +1,117 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Gestion des Réclamations</h1>
+      <p>{{ filteredClaims.length }} réclamation(s)</p>
+    </div>
+    <button routerLink="/dashboard/claims/new" class="btn btn-primary">
+      + Nouvelle Réclamation
+    </button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-row" *ngIf="stats">
+    <div class="stat-mini">
+      <span class="stat-value">{{ stats.total }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-mini new">
+      <span class="stat-value">{{ stats.new }}</span>
+      <span class="stat-label">Nouvelles</span>
+    </div>
+    <div class="stat-mini progress">
+      <span class="stat-value">{{ stats.inProgress }}</span>
+      <span class="stat-label">En cours</span>
+    </div>
+    <div class="stat-mini resolved">
+      <span class="stat-value">{{ stats.resolved }}</span>
+      <span class="stat-label">Résolues</span>
+    </div>
+    <div class="stat-mini closed">
+      <span class="stat-value">{{ stats.closed }}</span>
+      <span class="stat-label">Fermées</span>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (ngModelChange)="filterClaims()"
+      placeholder="Rechercher par citoyen ou sujet..."
+      class="search-input"
+    />
+    
+    <select [(ngModel)]="filterStatus" (ngModelChange)="filterClaims()" class="filter-select">
+      <option value="">Tous les statuts</option>
+      <option value="NEW">Nouvelle</option>
+      <option value="IN_PROGRESS">En cours</option>
+      <option value="RESOLVED">Résolue</option>
+      <option value="CLOSED">Fermée</option>
+      <option value="REJECTED">Rejetée</option>
+    </select>
+
+    <select [(ngModel)]="filterCategory" (ngModelChange)="filterClaims()" class="filter-select">
+      <option value="">Toutes les catégories</option>
+      <option value="INFRASTRUCTURE">Infrastructure</option>
+      <option value="SANITATION">Assainissement</option>
+      <option value="LIGHTING">Éclairage</option>
+      <option value="SECURITY">Sécurité</option>
+      <option value="ADMINISTRATIVE">Administratif</option>
+      <option value="OTHER">Autre</option>
+    </select>
+
+    <select [(ngModel)]="filterPriority" (ngModelChange)="filterClaims()" class="filter-select">
+      <option value="">Toutes les priorités</option>
+      <option value="LOW">Basse</option>
+      <option value="MEDIUM">Moyenne</option>
+      <option value="HIGH">Haute</option>
+      <option value="URGENT">Urgente</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Citoyen</th>
+          <th>Catégorie</th>
+          <th>Sujet</th>
+          <th>Priorité</th>
+          <th>Statut</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of filteredClaims">
+          <td>#{{ claim.id }}</td>
+          <td>
+            <div>{{ claim.citizenName }}</div>
+            <small>{{ claim.citizenPhone }}</small>
+          </td>
+          <td>{{ claim.category }}</td>
+          <td>{{ claim.subject }}</td>
+          <td>
+            <span class="priority-badge" [class]="'priority-' + claim.priority.toLowerCase()">
+              {{ claim.priority }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class]="'status-' + claim.status.toLowerCase().replace('_', '-')">
+              {{ claim.status }}
+            </span>
+          </td>
+          <td>{{ claim.createdAt | date: 'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button [routerLink]="['/dashboard/claims', claim.id]" class="btn-icon" title="Voir les détails">👁️ Voir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

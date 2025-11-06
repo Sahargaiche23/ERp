@@ -1,0 +1,81 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>ERP Municipalité de Tunis</h1>
+      <h2>Inscription</h2>
+    </div>
+    
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input 
+          id="username"
+          type="text"
+          formControlName="username" 
+          class="form-control"
+          placeholder="Choisissez un nom d'utilisateur"
+        />
+        <div class="error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+          <span *ngIf="form.get('username')?.errors?.['required']">Le nom d'utilisateur est requis</span>
+          <span *ngIf="form.get('username')?.errors?.['minlength']">Le nom d'utilisateur doit contenir au moins 3 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          id="email"
+          type="email"
+          formControlName="email" 
+          class="form-control"
+          placeholder="votre.email@example.com"
+        />
+        <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          <span *ngIf="form.get('email')?.errors?.['required']">L'email est requis</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">L'email n'est pas valide</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          id="password"
+          type="password"
+          formControlName="password" 
+          class="form-control"
+          placeholder="Choisissez un mot de passe"
+        />
+        <div class="error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          <span *ngIf="form.get('password')?.errors?.['required']">Le mot de passe est requis</span>
+          <span *ngIf="form.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input 
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword" 
+          class="form-control"
+          placeholder="Confirmez votre mot de passe"
+        />
+        <div class="error" *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched">
+          Le mot de passe de confirmation est requis
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">S'inscrire</span>
+        <span *ngIf="loading">Inscription en cours...</span>
+      </button>
+
+      <div class="message success" *ngIf="message && messageType === 'success'">{{ message }}</div>
+      <div class="message error" *ngIf="message && messageType === 'error'">{{ message }}</div>
+    </form>
+
+    <div class="auth-footer">
+      <a routerLink="/login">Vous avez déjà un compte? Se connecter</a>
+    </div>
+  </div>
+</div>

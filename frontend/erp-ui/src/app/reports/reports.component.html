@@ -1,0 +1,91 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Rapports & Analyses</h1>
+  </div>
+
+  <div class="report-generator">
+    <h2>Générer un nouveau rapport</h2>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Type de rapport</label>
+        <select [(ngModel)]="reportConfig.type" class="form-control">
+          <option value="HR">Ressources Humaines</option>
+          <option value="BUDGET">Budget</option>
+          <option value="CLAIMS">Réclamations</option>
+          <option value="PROJECTS">Projets</option>
+          <option value="FINANCIAL">Financier</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Période</label>
+        <select [(ngModel)]="reportConfig.period" class="form-control">
+          <option value="DAILY">Quotidien</option>
+          <option value="WEEKLY">Hebdomadaire</option>
+          <option value="MONTHLY">Mensuel</option>
+          <option value="QUARTERLY">Trimestriel</option>
+          <option value="YEARLY">Annuel</option>
+          <option value="CUSTOM">Personnalisé</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Format</label>
+        <select [(ngModel)]="reportConfig.format" class="form-control">
+          <option value="PDF">PDF</option>
+          <option value="EXCEL">Excel</option>
+          <option value="CSV">CSV</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="reportConfig.period === 'CUSTOM'">
+        <label>Date de début</label>
+        <input type="date" [(ngModel)]="reportConfig.startDate" class="form-control" />
+      </div>
+
+      <div class="form-group" *ngIf="reportConfig.period === 'CUSTOM'">
+        <label>Date de fin</label>
+        <input type="date" [(ngModel)]="reportConfig.endDate" class="form-control" />
+      </div>
+    </div>
+
+    <button (click)="generateReport()" [disabled]="generating" class="btn btn-primary">
+      <span *ngIf="!generating">📊 Générer le rapport</span>
+      <span *ngIf="generating">⏳ Génération en cours...</span>
+    </button>
+  </div>
+
+  <div class="reports-list">
+    <h2>Rapports générés</h2>
+    
+    <div class="loading" *ngIf="loading">Chargement...</div>
+
+    <div class="table-container" *ngIf="!loading">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Date de génération</th>
+            <th>Généré par</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports">
+            <td>{{ report.name }}</td>
+            <td>{{ report.type }}</td>
+            <td>{{ report.generatedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ report.generatedBy }}</td>
+            <td>
+              <button (click)="downloadReport(report.id)" class="btn btn-sm">
+                📥 Télécharger
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

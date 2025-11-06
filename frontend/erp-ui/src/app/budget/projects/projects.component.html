@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Gestion des Projets</h1>
+      <p>{{ filteredProjects.length }} projet(s)</p>
+    </div>
+    <button routerLink="/dashboard/budget/projects/new" class="btn btn-primary">
+      + Nouveau Projet
+    </button>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="filterStatus" (ngModelChange)="filterProjects()" class="filter-select">
+      <option value="">Tous les statuts</option>
+      <option value="PLANNING">Planification</option>
+      <option value="IN_PROGRESS">En cours</option>
+      <option value="ON_HOLD">En attente</option>
+      <option value="COMPLETED">Terminé</option>
+      <option value="CANCELLED">Annulé</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Département</th>
+          <th>Budget</th>
+          <th>Dépensé</th>
+          <th>Progression</th>
+          <th>Statut</th>
+          <th>Manager</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of filteredProjects">
+          <td><strong>{{ project.name }}</strong></td>
+          <td>{{ project.department }}</td>
+          <td>{{ project.budget | number }}€</td>
+          <td>{{ project.spent | number }}€</td>
+          <td>
+            <div class="progress-container">
+              <div class="progress-bar-small">
+                <div class="progress-fill-small" [style.width.%]="project.progress"></div>
+              </div>
+              <span>{{ project.progress }}%</span>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge" [class]="'status-' + project.status.toLowerCase().replace('_', '-')">
+              {{ project.status }}
+            </span>
+          </td>
+          <td>{{ project.manager }}</td>
+          <td class="actions">
+            <button [routerLink]="['/dashboard/budget/projects', project.id]" class="btn-icon" title="Voir">👁️</button>
+            <button (click)="deleteProject(project.id)" class="btn-icon" title="Supprimer">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

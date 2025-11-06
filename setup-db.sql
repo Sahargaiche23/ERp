@@ -1,0 +1,5 @@
+CREATE DATABASE erp_auth;
+CREATE DATABASE erp_hr;
+CREATE DATABASE erp_budget;
+CREATE DATABASE erp_claims;
+CREATE DATABASE erp_reports;

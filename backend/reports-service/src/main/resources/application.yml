@@ -1,0 +1,25 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: reports-service
+  datasource:
+    url: jdbc:postgresql://postgres:5432/${POSTGRES_DB:erp_db}
+    username: ${POSTGRES_USER:erp_user}
+    password: ${POSTGRES_PASSWORD:erp_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    schemas: reports
+    defaultSchema: reports
+    locations: classpath:db/migration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

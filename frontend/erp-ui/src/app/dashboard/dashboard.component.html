@@ -1,0 +1,90 @@
+<div class="dashboard-container">
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h2>ERP Tunis</h2>
+      <p *ngIf="currentUser">{{ currentUser.fullName }}</p>
+    </div>
+    
+    <ul class="nav-menu">
+      <li routerLinkActive="active">
+        <a routerLink="/dashboard/home">
+          <span class="icon">📊</span>
+          <span>Tableau de bord</span>
+        </a>
+      </li>
+      
+      <!-- Menu pour CITIZEN -->
+      <li routerLinkActive="active" *ngIf="isCitizen()">
+        <a routerLink="/dashboard/claims">
+          <span class="icon">📝</span>
+          <span>Mes Réclamations</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" *ngIf="isCitizen()">
+        <a routerLink="/dashboard/home">
+          <span class="icon">🔔</span>
+          <span>Notifications</span>
+        </a>
+      </li>
+      
+      <!-- Menu pour AGENT -->
+      <li routerLinkActive="active" *ngIf="isAgent() || isChief() || isAdmin()">
+        <a routerLink="/dashboard/claims">
+          <span class="icon">📋</span>
+          <span>Réclamations</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" *ngIf="isAgent()">
+        <a routerLink="/dashboard/home">
+          <span class="icon">✅</span>
+          <span>Mes Tâches</span>
+        </a>
+      </li>
+      
+      <!-- Menu pour CHIEF -->
+      <li routerLinkActive="active" *ngIf="isChief() || isAdmin()">
+        <a routerLink="/dashboard/hr">
+          <span class="icon">👥</span>
+          <span>Gestion Équipe</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" *ngIf="isChief() || isAdmin()">
+        <a routerLink="/dashboard/reports">
+          <span class="icon">📈</span>
+          <span>Rapports</span>
+        </a>
+      </li>
+      
+      <!-- Menu pour ADMIN -->
+      <li routerLinkActive="active" *ngIf="isAdmin()">
+        <a routerLink="/dashboard/hr">
+          <span class="icon">👥</span>
+          <span>Gestion Utilisateurs</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" *ngIf="isAdmin()">
+        <a routerLink="/dashboard/budget">
+          <span class="icon">💰</span>
+          <span>Budget & Projets</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" *ngIf="isAdmin()">
+        <a routerLink="/dashboard/home">
+          <span class="icon">⚙️</span>
+          <span>Configuration</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="btn-logout">
+        <span class="icon">🚪</span>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
