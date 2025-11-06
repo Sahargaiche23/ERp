@@ -27,7 +27,8 @@ export class HomeComponent implements OnInit {
     performance: 0,
     resolved: 0,
     agents: 0,
-    teamPerformance: 0
+    teamPerformance: 0,
+    notifications: 0
   };
 
   constructor(
@@ -50,50 +51,87 @@ export class HomeComponent implements OnInit {
   }
 
   loadDynamicStats(): void {
-    // Charger TOUTES les statistiques en parallèle
-    forkJoin({
-      claims: this.claimService.getStats(),
-      employees: this.employeeService.getEmployees(),
-      budgets: this.budgetService.getBudgets(),
-      users: this.authService.getAllUsers()
-    }).subscribe({
-      next: (data) => {
-        console.log('📊 Données chargées:', data);
-        
-        // Réclamations
-        this.stats.claims = data.claims.total || 0;
-        this.stats.resolved = data.claims.resolved || 0;
-        
-        // Employés
-        this.stats.agents = data.employees.length || 0;
-        
-        // Budgets - Calculer le total
-        this.stats.budget = data.budgets.reduce((sum: number, b: any) => sum + (b.totalAllocated || 0), 0);
-        
-        // Projets = Nombre de budgets (car les projets sont dans la table budget)
-        this.stats.projects = data.budgets.length || 0;
-        
-        // Utilisateurs
-        this.stats.users = data.users.length || 0;
-        
-        // Performance
-        if (data.claims.total > 0) {
-          this.stats.performance = Math.round((data.claims.resolved / data.claims.total) * 100);
-        } else {
-          this.stats.performance = 0;
+    // Si CITIZEN, charger SES réclamations
+    if (this.isCitizen()) {
+      this.claimService.getClaims().subscribe({
+        next: (allClaims) => {
+          // Filtrer les réclamations du citoyen
+          const userEmail = this.currentUser?.email?.toLowerCase();
+          const userName = this.currentUser?.username?.toLowerCase();
+          
+          const myClaims = allClaims.filter(claim => {
+            const claimEmail = claim.citizenEmail?.toLowerCase();
+            const claimName = claim.citizenName?.toLowerCase();
+            return (userEmail && claimEmail === userEmail) || 
+                   (userName && claimName === userName);
+          });
+          
+          // Calculer les stats du citoyen
+          this.stats.claims = myClaims.length;
+          this.stats.resolved = myClaims.filter(c => c.status === 'RESOLVED' || c.status === 'CLOSED').length;
+          
+          const newClaims = myClaims.filter(c => c.status === 'NEW').length;
+          this.stats.notifications = newClaims;
+          
+          console.log('📊 Stats citoyen:', {
+            total: this.stats.claims,
+            resolved: this.stats.resolved,
+            notifications: this.stats.notifications
+          });
+          
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('❌ Erreur chargement réclamations:', err);
+          this.loading = false;
         }
-        
-        // Performance équipe (même que performance globale)
-        this.stats.teamPerformance = this.stats.performance;
-        
-        console.log('✅ Stats calculées:', this.stats);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('❌ Erreur chargement statistiques:', err);
-        this.loading = false;
-      }
-    });
+      });
+    } else {
+      // ADMIN, CHIEF, AGENT: Charger les stats globales
+      forkJoin({
+        claims: this.claimService.getStats(),
+        employees: this.employeeService.getEmployees(),
+        budgets: this.budgetService.getBudgets(),
+        users: this.authService.getAllUsers()
+      }).subscribe({
+        next: (data) => {
+          console.log('📊 Données chargées:', data);
+          
+          // Réclamations
+          this.stats.claims = data.claims.total || 0;
+          this.stats.resolved = data.claims.resolved || 0;
+          
+          // Employés
+          this.stats.agents = data.employees.length || 0;
+          
+          // Budgets - Calculer le total
+          this.stats.budget = data.budgets.reduce((sum: number, b: any) => sum + (b.totalAllocated || 0), 0);
+          
+          // Projets = Nombre de budgets (car les projets sont dans la table budget)
+          this.stats.projects = data.budgets.length || 0;
+          
+          // Utilisateurs
+          this.stats.users = data.users.length || 0;
+          
+          // Performance
+          if (data.claims.total > 0) {
+            this.stats.performance = Math.round((data.claims.resolved / data.claims.total) * 100);
+          } else {
+            this.stats.performance = 0;
+          }
+          
+          // Performance équipe (même que performance globale)
+          this.stats.teamPerformance = this.stats.performance;
+          
+          console.log('✅ Stats calculées:', this.stats);
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('❌ Erreur chargement statistiques:', err);
+          this.loading = false;
+        }
+      });
+    }
   }
   isCitizen(): boolean {
     return this.currentUser?.role?.toUpperCase() === 'CITIZEN';

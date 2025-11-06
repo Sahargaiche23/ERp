@@ -40,7 +40,7 @@ export class ClaimDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadClaim(id);
-      this.loadComments(id);
+      // loadComments sera appelé après loadClaim
     } else {
       this.loading = false;
       this.router.navigate(['/dashboard/claims']);
@@ -52,6 +52,8 @@ export class ClaimDetailComponent implements OnInit {
       next: (data) => {
         this.claim = data;
         this.loading = false;
+        // Charger les commentaires après avoir chargé la réclamation
+        this.loadComments(id);
       },
       error: (err) => {
         console.error('Error loading claim:', err);
@@ -65,14 +67,38 @@ export class ClaimDetailComponent implements OnInit {
   }
 
   loadComments(id: string): void {
+    // Charger les commentaires depuis l'API (si endpoint existe)
     this.claimService.getComments(id).subscribe({
       next: (data) => {
         this.comments = data;
+        // Ajouter la réponse de la réclamation comme commentaire si elle existe
+        this.addResponseAsComment();
       },
       error: (err) => {
         console.error('Error loading comments:', err);
+        // Si l'endpoint n'existe pas, afficher quand même la réponse
+        this.addResponseAsComment();
       }
     });
+  }
+
+  private addResponseAsComment(): void {
+    // Si la réclamation a une réponse, l'afficher comme commentaire
+    if (this.claim?.response && this.claim.response.trim()) {
+      const responseComment: ClaimComment = {
+        id: 1,
+        claimId: this.claim.id,
+        author: 'Agent/Admin',
+        comment: this.claim.response,
+        createdAt: this.claim.updatedAt || this.claim.createdAt
+      };
+      
+      // Ajouter uniquement si pas déjà présent
+      const exists = this.comments.some(c => c.comment === this.claim!.response);
+      if (!exists) {
+        this.comments.push(responseComment);
+      }
+    }
   }
 
   // Vérification des rôles
