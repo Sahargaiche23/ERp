@@ -1,5 +1,5 @@
 export interface Claim {
-  id: number;
+  id: string;
   citizenName: string;
   citizenEmail: string;
   citizenPhone: string;
@@ -14,12 +14,13 @@ export interface Claim {
   updatedAt: Date;
   resolvedAt?: Date;
   resolution?: string;
+  response?: string;
   attachments?: string[];
 }
 
 export interface ClaimComment {
   id: number;
-  claimId: number;
+  claimId: string;
   author: string;
   comment: string;
   createdAt: Date;

@@ -22,16 +22,30 @@
         </div>
 
         <div class="form-group">
-          <label for="fullName">Nom Complet *</label>
+          <label for="firstName">Prénom *</label>
           <input
-            id="fullName"
+            id="firstName"
             type="text"
-            formControlName="fullName"
+            formControlName="firstName"
             class="form-control"
-            placeholder="Prénom Nom"
+            placeholder="Prénom"
           />
-          <div class="error" *ngIf="employeeForm.get('fullName')?.invalid && employeeForm.get('fullName')?.touched">
-            Le nom complet est requis (min 3 caractères)
+          <div class="error" *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+            Le prénom est requis (min 2 caractères)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Nom *</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            class="form-control"
+            placeholder="Nom"
+          />
+          <div class="error" *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
+            Le nom est requis (min 2 caractères)
           </div>
         </div>
       </div>

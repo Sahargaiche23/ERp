@@ -74,6 +74,12 @@
           <span>Configuration</span>
         </a>
       </li>
+      <li routerLinkActive="active" *ngIf="isAdmin()">
+        <a routerLink="/dashboard/admin/logs">
+          <span class="icon">📋</span>
+          <span>Logs & Audit</span>
+        </a>
+      </li>
     </ul>
 
     <div class="sidebar-footer">

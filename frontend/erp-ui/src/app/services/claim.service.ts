@@ -31,7 +31,7 @@ export class ClaimService {
     return this.http.get<Claim[]>(this.apiUrl, { params });
   }
 
-  getClaim(id: number): Observable<Claim> {
+  getClaim(id: string): Observable<Claim> {
     return this.http.get<Claim>(`${this.apiUrl}/${id}`);
   }
 
@@ -39,28 +39,32 @@ export class ClaimService {
     return this.http.post<Claim>(this.apiUrl, claim);
   }
 
-  updateClaim(id: number, claim: Partial<Claim>): Observable<Claim> {
+  updateClaim(id: string, claim: Partial<Claim>): Observable<Claim> {
     return this.http.put<Claim>(`${this.apiUrl}/${id}`, claim);
   }
 
-  updateClaimStatus(id: number, status: string, resolution?: string): Observable<Claim> {
+  updateClaimStatus(id: string, status: string, resolution?: string): Observable<Claim> {
     return this.http.patch<Claim>(`${this.apiUrl}/${id}/status`, { status, resolution });
   }
 
-  assignClaim(id: number, assignedTo: string): Observable<Claim> {
+  assignClaim(id: string, assignedTo: string): Observable<Claim> {
     return this.http.patch<Claim>(`${this.apiUrl}/${id}/assign`, { assignedTo });
   }
 
-  deleteClaim(id: number): Observable<void> {
+  deleteClaim(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getComments(claimId: number): Observable<ClaimComment[]> {
+  getComments(claimId: string): Observable<ClaimComment[]> {
     return this.http.get<ClaimComment[]>(`${this.apiUrl}/${claimId}/comments`);
   }
 
-  addComment(claimId: number, comment: string): Observable<ClaimComment> {
+  addComment(claimId: string, comment: string): Observable<ClaimComment> {
     return this.http.post<ClaimComment>(`${this.apiUrl}/${claimId}/comments`, { comment });
+  }
+
+  respondToClaim(claimId: string, response: string): Observable<Claim> {
+    return this.http.post<Claim>(`${this.apiUrl}/${claimId}/respond`, { response });
   }
 
   getStats(): Observable<ClaimStats> {

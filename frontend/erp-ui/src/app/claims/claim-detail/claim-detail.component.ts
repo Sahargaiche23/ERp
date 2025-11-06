@@ -41,11 +41,14 @@ export class ClaimDetailComponent implements OnInit {
     if (id) {
       this.loadClaim(id);
       this.loadComments(id);
+    } else {
+      this.loading = false;
+      this.router.navigate(['/dashboard/claims']);
     }
   }
 
   loadClaim(id: string): void {
-    this.claimService.getClaim(Number(id)).subscribe({
+    this.claimService.getClaim(id).subscribe({
       next: (data) => {
         this.claim = data;
         this.loading = false;
@@ -53,12 +56,16 @@ export class ClaimDetailComponent implements OnInit {
       error: (err) => {
         console.error('Error loading claim:', err);
         this.loading = false;
+        // Rediriger vers la liste si réclamation non trouvée
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/claims']);
+        }, 2000);
       }
     });
   }
 
   loadComments(id: string): void {
-    this.claimService.getComments(Number(id)).subscribe({
+    this.claimService.getComments(id).subscribe({
       next: (data) => {
         this.comments = data;
       },
@@ -164,15 +171,20 @@ export class ClaimDetailComponent implements OnInit {
     if (!this.claim || !this.newComment.trim() || !this.canRespond()) return;
     
     this.addingComment = true;
-    this.claimService.addComment(this.claim.id, this.newComment).subscribe({
-      next: (comment) => {
-        this.comments.push(comment);
+    
+    // Utiliser l'endpoint /respond au lieu de /comments
+    this.claimService.respondToClaim(this.claim.id, this.newComment).subscribe({
+      next: (updatedClaim) => {
+        // Ajouter le commentaire à l'historique local
+        this.addSystemComment(this.newComment);
         this.newComment = '';
         this.addingComment = false;
+        alert('Réponse envoyée avec succès!');
       },
       error: (err) => {
         console.error('Error adding comment:', err);
         this.addingComment = false;
+        alert('Erreur lors de l\'envoi de la réponse');
       }
     });
   }

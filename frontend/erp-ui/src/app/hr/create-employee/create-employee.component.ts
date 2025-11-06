@@ -38,7 +38,8 @@ export class CreateEmployeeComponent implements OnInit {
   ) {
     this.employeeForm = this.fb.group({
       matricule: ['', Validators.required],
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       department: ['', Validators.required],
@@ -71,8 +72,8 @@ export class CreateEmployeeComponent implements OnInit {
     this.loading = true;
     this.message = '';
 
-    // Simuler l'appel API
-    this.http.post('http://localhost:8083/api/employees', this.employeeForm.value).subscribe({
+    // Appel API HR Service (port 8082)
+    this.http.post('http://localhost:8082/api/employees', this.employeeForm.value).subscribe({
       next: (response) => {
         this.success = true;
         this.message = 'Employé créé avec succès!';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { BudgetService } from '../../services/budget.service';
 
 @Component({
   selector: 'app-create-budget',
@@ -33,21 +33,15 @@ export class CreateBudgetComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private budgetService: BudgetService,
     private router: Router
   ) {
     this.budgetForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(5)]],
-      category: ['', Validators.required],
-      fiscalYear: [2025, Validators.required],
-      totalAmount: ['', [Validators.required, Validators.min(1000)]],
-      allocatedAmount: [0],
-      spentAmount: [0],
       department: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(20)]],
-      status: ['DRAFT', Validators.required]
+      year: [2025, Validators.required],
+      totalAllocated: ['', [Validators.required, Validators.min(1000)]],
+      totalSpent: [0],
+      status: ['APPROVED', Validators.required]
     });
   }
 
@@ -58,22 +52,42 @@ export class CreateBudgetComponent implements OnInit {
       Object.keys(this.budgetForm.controls).forEach(key => {
         this.budgetForm.get(key)?.markAsTouched();
       });
+      this.message = 'Veuillez remplir tous les champs requis';
+      this.success = false;
       return;
     }
 
     this.loading = true;
     this.message = '';
 
-    // API call simulée
-    setTimeout(() => {
-      this.success = true;
-      this.message = 'Budget créé avec succès!';
-      this.loading = false;
-      
-      setTimeout(() => {
-        this.router.navigate(['/dashboard/budget/budgets']);
-      }, 2000);
-    }, 1000);
+    const budgetData = {
+      department: this.budgetForm.value.department,
+      year: this.budgetForm.value.year,
+      totalAllocated: this.budgetForm.value.totalAllocated,
+      totalSpent: this.budgetForm.value.totalSpent || 0,
+      status: this.budgetForm.value.status
+    };
+
+    this.budgetService.createBudget(budgetData).subscribe({
+      next: (budget) => {
+        this.success = true;
+        this.message = 'Budget créé avec succès!';
+        this.loading = false;
+        console.log('Budget créé:', budget);
+        
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/budget/budgets']).then(() => {
+            window.location.reload();
+          });
+        }, 1500);
+      },
+      error: (error) => {
+        this.success = false;
+        this.message = 'Erreur lors de la création: ' + (error.error?.message || error.message);
+        this.loading = false;
+        console.error('Erreur création budget:', error);
+      }
+    });
   }
 
   cancel(): void {

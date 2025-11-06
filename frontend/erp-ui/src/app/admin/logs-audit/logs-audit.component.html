@@ -1,0 +1,176 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>📋 Logs & Audit</h1>
+      <p>Historique des actions et audit trail</p>
+    </div>
+    <button (click)="exportLogs()" class="btn btn-primary">
+      📥 Exporter les Logs
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-card">
+    <h3>🔍 Filtres</h3>
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>Action:</label>
+        <select [(ngModel)]="filterAction" (ngModelChange)="applyFilters()" class="form-control">
+          <option value="">Toutes les actions</option>
+          <option *ngFor="let action of actions" [value]="action">{{ action }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Utilisateur:</label>
+        <input 
+          type="text" 
+          [(ngModel)]="filterUser" 
+          (ngModelChange)="applyFilters()"
+          placeholder="Nom d'utilisateur"
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Date début:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="filterDateFrom" 
+          (ngModelChange)="applyFilters()"
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Date fin:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="filterDateTo" 
+          (ngModelChange)="applyFilters()"
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Statut:</label>
+        <select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()" class="form-control">
+          <option value="">Tous les statuts</option>
+          <option value="SUCCESS">Succès</option>
+          <option value="FAILURE">Échec</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button (click)="clearFilters()" class="btn btn-secondary">
+          🔄 Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ filteredLogs.length }}</div>
+        <div class="stat-label">Total Logs</div>
+      </div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getSuccessCount() }}</div>
+        <div class="stat-label">Succès</div>
+      </div>
+    </div>
+
+    <div class="stat-card failure">
+      <div class="stat-icon">❌</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getFailureCount() }}</div>
+        <div class="stat-label">Échecs</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getUniqueUsers() }}</div>
+        <div class="stat-label">Utilisateurs Actifs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table des logs -->
+  <div class="logs-table-container">
+    <div class="loading" *ngIf="loading">Chargement des logs...</div>
+
+    <table class="logs-table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date & Heure</th>
+          <th>Utilisateur</th>
+          <th>Action</th>
+          <th>Ressource</th>
+          <th>Statut</th>
+          <th>IP</th>
+          <th>Détails</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of getPaginatedLogs()">
+          <td>{{ log.id }}</td>
+          <td>{{ log.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+          <td>
+            <span class="user-badge">{{ log.username }}</span>
+          </td>
+          <td>
+            <span class="action-badge" [class]="'action-' + log.action.toLowerCase()">
+              {{ log.action }}
+            </span>
+          </td>
+          <td>{{ log.resource }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + log.status.toLowerCase()">
+              {{ log.status === 'SUCCESS' ? '✅ Succès' : '❌ Échec' }}
+            </span>
+          </td>
+          <td>{{ log.ipAddress }}</td>
+          <td class="details-cell">{{ log.details }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading && filteredLogs.length > 0">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="btn btn-sm"
+      >
+        ← Précédent
+      </button>
+      
+      <span class="page-info">
+        Page {{ currentPage }} sur {{ totalPages }} 
+        ({{ filteredLogs.length }} logs)
+      </span>
+      
+      <button 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+        class="btn btn-sm"
+      >
+        Suivant →
+      </button>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && filteredLogs.length === 0">
+      <p>Aucun log trouvé avec les filtres sélectionnés</p>
+    </div>
+  </div>
+</div>

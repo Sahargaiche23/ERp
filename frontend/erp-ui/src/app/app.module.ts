@@ -20,6 +20,7 @@ import { HomeComponent } from './dashboard/home/home.component';
 // HR Components
 import { EmployeesComponent } from './hr/employees/employees.component';
 import { CreateEmployeeComponent } from './hr/create-employee/create-employee.component';
+import { EmployeeDetailComponent } from './hr/employee-detail/employee-detail.component';
 import { LeavesComponent } from './hr/leaves/leaves.component';
 import { AttendanceComponent } from './hr/attendance/attendance.component';
 
@@ -27,6 +28,7 @@ import { AttendanceComponent } from './hr/attendance/attendance.component';
 import { BudgetsComponent } from './budget/budgets/budgets.component';
 import { CreateBudgetComponent } from './budget/create-budget/create-budget.component';
 import { ProjectsComponent } from './budget/projects/projects.component';
+import { BudgetDetailComponent } from './budget/budget-detail/budget-detail.component';
 
 // Claims Components
 import { ClaimsListComponent } from './claims/claims-list/claims-list.component';
@@ -35,6 +37,9 @@ import { ClaimDetailComponent } from './claims/claim-detail/claim-detail.compone
 
 // Reports Components
 import { ReportsComponent } from './reports/reports.component';
+
+// Admin Components
+import { LogsAuditComponent } from './admin/logs-audit/logs-audit.component';
 
 @NgModule({
   declarations: [
@@ -47,15 +52,18 @@ import { ReportsComponent } from './reports/reports.component';
     HomeComponent,
     EmployeesComponent,
     CreateEmployeeComponent,
+    EmployeeDetailComponent,
     LeavesComponent,
     AttendanceComponent,
     BudgetsComponent,
     CreateBudgetComponent,
     ProjectsComponent,
+    BudgetDetailComponent,
     ClaimsListComponent,
     CreateClaimComponent,
     ClaimDetailComponent,
-    ReportsComponent
+    ReportsComponent,
+    LogsAuditComponent
   ],
   imports: [
     BrowserModule,

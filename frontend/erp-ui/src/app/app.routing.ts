@@ -15,6 +15,7 @@ import { HomeComponent } from './dashboard/home/home.component';
 // HR Components
 import { EmployeesComponent } from './hr/employees/employees.component';
 import { CreateEmployeeComponent } from './hr/create-employee/create-employee.component';
+import { EmployeeDetailComponent } from './hr/employee-detail/employee-detail.component';
 import { LeavesComponent } from './hr/leaves/leaves.component';
 import { AttendanceComponent } from './hr/attendance/attendance.component';
 
@@ -22,6 +23,7 @@ import { AttendanceComponent } from './hr/attendance/attendance.component';
 import { BudgetsComponent } from './budget/budgets/budgets.component';
 import { CreateBudgetComponent } from './budget/create-budget/create-budget.component';
 import { ProjectsComponent } from './budget/projects/projects.component';
+import { BudgetDetailComponent } from './budget/budget-detail/budget-detail.component';
 
 // Claims Components
 import { ClaimsListComponent } from './claims/claims-list/claims-list.component';
@@ -30,6 +32,9 @@ import { ClaimDetailComponent } from './claims/claim-detail/claim-detail.compone
 
 // Reports Components
 import { ReportsComponent } from './reports/reports.component';
+
+// Admin Components
+import { LogsAuditComponent } from './admin/logs-audit/logs-audit.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -53,16 +58,19 @@ const routes: Routes = [
       { path: 'hr', redirectTo: 'hr/employees', pathMatch: 'full' },
       { path: 'hr/employees', component: EmployeesComponent },
       { path: 'hr/employees/new', component: CreateEmployeeComponent },
+      { path: 'hr/employees/:id', component: EmployeeDetailComponent },
       { path: 'hr/leaves', component: LeavesComponent },
       { path: 'hr/attendance', component: AttendanceComponent },
       { path: 'budget', redirectTo: 'budget/budgets', pathMatch: 'full' },
       { path: 'budget/budgets', component: BudgetsComponent },
       { path: 'budget/budgets/new', component: CreateBudgetComponent },
+      { path: 'budget/budgets/:id', component: BudgetDetailComponent },
       { path: 'budget/projects', component: ProjectsComponent },
       { path: 'claims', component: ClaimsListComponent },
       { path: 'claims/new', component: CreateClaimComponent },
       { path: 'claims/:id', component: ClaimDetailComponent },
-      { path: 'reports', component: ReportsComponent }
+      { path: 'reports', component: ReportsComponent },
+      { path: 'admin/logs', component: LogsAuditComponent }
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

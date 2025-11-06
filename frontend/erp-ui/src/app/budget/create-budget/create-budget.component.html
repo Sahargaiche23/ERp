@@ -9,140 +9,76 @@
       <h2>Informations Générales</h2>
       
       <div class="form-group">
-        <label for="name">Nom du Budget *</label>
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          class="form-control"
-          placeholder="Ex: Rénovation des écoles municipales 2025"
-        />
-        <div class="error" *ngIf="budgetForm.get('name')?.invalid && budgetForm.get('name')?.touched">
-          Le nom est requis (min 5 caractères)
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="category">Catégorie *</label>
-          <select id="category" formControlName="category" class="form-control">
-            <option value="">-- Sélectionnez --</option>
-            <option *ngFor="let cat of categories" [value]="cat.value">
-              {{ cat.icon }} {{ cat.label }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="fiscalYear">Année Fiscale *</label>
-          <select id="fiscalYear" formControlName="fiscalYear" class="form-control">
-            <option *ngFor="let year of fiscalYears" [value]="year.value">
-              {{ year.label }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="department">Département Responsable *</label>
+        <label for="department">Département *</label>
         <input
           id="department"
           type="text"
           formControlName="department"
           class="form-control"
-          placeholder="Ex: Direction des Travaux Publics"
+          placeholder="Ex: Travaux Publics, Services Techniques, Finances"
         />
+        <div class="error" *ngIf="budgetForm.get('department')?.invalid && budgetForm.get('department')?.touched">
+          Le département est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="year">Année Fiscale *</label>
+        <select id="year" formControlName="year" class="form-control">
+          <option *ngFor="let year of fiscalYears" [value]="year.value">
+            {{ year.label }}
+          </option>
+        </select>
       </div>
     </div>
 
     <div class="form-section">
-      <h2>Montants et Allocation</h2>
+      <h2>Montants</h2>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="totalAmount">Montant Total (TND) *</label>
+          <label for="totalAllocated">Budget Alloué (€) *</label>
           <input
-            id="totalAmount"
+            id="totalAllocated"
             type="number"
-            formControlName="totalAmount"
+            formControlName="totalAllocated"
             class="form-control"
             placeholder="1000000"
+            min="1000"
           />
-          <div class="form-hint">Montant total du budget</div>
+          <div class="form-hint">Montant total alloué pour ce budget</div>
+          <div class="error" *ngIf="budgetForm.get('totalAllocated')?.invalid && budgetForm.get('totalAllocated')?.touched">
+            Le montant doit être supérieur à 1000€
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="allocatedAmount">Montant Alloué (TND)</label>
+          <label for="totalSpent">Montant Dépensé (€)</label>
           <input
-            id="allocatedAmount"
+            id="totalSpent"
             type="number"
-            formControlName="allocatedAmount"
+            formControlName="totalSpent"
             class="form-control"
             placeholder="0"
+            min="0"
           />
-          <div class="form-hint">Montant déjà alloué</div>
+          <div class="form-hint">Montant déjà dépensé (défaut: 0)</div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="spentAmount">Montant Dépensé (TND)</label>
-        <input
-          id="spentAmount"
-          type="number"
-          formControlName="spentAmount"
-          class="form-control"
-          placeholder="0"
-          readonly
-        />
-        <div class="form-hint">Sera calculé automatiquement</div>
       </div>
     </div>
 
     <div class="form-section">
-      <h2>Période et Détails</h2>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startDate">Date de Début *</label>
-          <input
-            id="startDate"
-            type="date"
-            formControlName="startDate"
-            class="form-control"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="endDate">Date de Fin *</label>
-          <input
-            id="endDate"
-            type="date"
-            formControlName="endDate"
-            class="form-control"
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="description">Description *</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          class="form-control"
-          rows="5"
-          placeholder="Décrivez l'objectif et les détails de ce budget..."
-        ></textarea>
-        <div class="form-hint">Minimum 20 caractères</div>
-      </div>
+      <h2>Statut</h2>
 
       <div class="form-group">
         <label for="status">Statut *</label>
         <select id="status" formControlName="status" class="form-control">
-          <option value="DRAFT">Brouillon</option>
-          <option value="PENDING_APPROVAL">En attente d'approbation</option>
-          <option value="APPROVED">Approuvé</option>
-          <option value="ACTIVE">Actif</option>
+          <option value="DRAFT">📝 Brouillon</option>
+          <option value="APPROVED">✅ Approuvé</option>
+          <option value="IN_PROGRESS">⏳ En cours</option>
+          <option value="CLOSED">🔒 Fermé</option>
         </select>
+        <div class="form-hint">Statut actuel du budget</div>
       </div>
     </div>
 

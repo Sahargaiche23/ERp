@@ -58,7 +58,12 @@ export class EmployeesComponent implements OnInit {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet employé?')) {
       this.employeeService.deleteEmployee(id).subscribe({
         next: () => {
+          alert('Employé supprimé avec succès!');
           this.loadEmployees();
+        },
+        error: (err) => {
+          console.error('Erreur suppression:', err);
+          alert('Erreur: Le service HR ne peut pas supprimer cet employé. Vérifiez qu\'il n\'a pas de données liées (présences, congés, etc.)');
         }
       });
     }

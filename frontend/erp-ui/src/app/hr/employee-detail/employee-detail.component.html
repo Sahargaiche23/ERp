@@ -1,0 +1,80 @@
+<div class="page-container">
+  <div class="loading" *ngIf="loading">Chargement...</div>
+
+  <div *ngIf="!loading && employee" class="detail-container">
+    <div class="detail-header">
+      <div>
+        <h1>👤 {{ employee.firstName }} {{ employee.lastName }}</h1>
+        <p class="matricule">Matricule: {{ employee.matricule }}</p>
+      </div>
+      <div class="header-actions">
+        <button (click)="goBack()" class="btn btn-secondary">
+          ← Retour
+        </button>
+        <button (click)="editEmployee()" class="btn btn-primary">
+          ✏️ Modifier
+        </button>
+        <button (click)="deleteEmployee()" class="btn btn-danger">
+          🗑️ Supprimer
+        </button>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-section">
+        <h2>📋 Informations Personnelles</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Prénom:</span>
+            <span class="value">{{ employee.firstName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Nom:</span>
+            <span class="value">{{ employee.lastName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ employee.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Téléphone:</span>
+            <span class="value">{{ employee.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h2>💼 Informations Professionnelles</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Département:</span>
+            <span class="value">{{ employee.department }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Poste:</span>
+            <span class="value">{{ employee.position }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Date d'embauche:</span>
+            <span class="value">{{ employee.hireDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Salaire:</span>
+            <span class="value">{{ employee.salary | number:'1.2-2' }}€</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Statut:</span>
+            <span class="status-badge" [class]="'status-' + employee.status.toLowerCase()">
+              {{ employee.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !employee" class="error-message">
+    <h2>❌ Employé non trouvé</h2>
+    <button (click)="goBack()" class="btn btn-primary">Retour à la liste</button>
+  </div>
+</div>

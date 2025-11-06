@@ -79,7 +79,7 @@ export class ClaimsListComponent implements OnInit {
     });
   }
 
-  updateStatus(id: number, status: string) {
+  updateStatus(id: string, status: string) {
     this.claimService.updateClaimStatus(id, status).subscribe({
       next: () => {
         this.loadClaims();
@@ -88,7 +88,7 @@ export class ClaimsListComponent implements OnInit {
     });
   }
 
-  deleteClaim(id: number) {
+  deleteClaim(id: string) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette réclamation?')) {
       this.claimService.deleteClaim(id).subscribe({
         next: () => {
