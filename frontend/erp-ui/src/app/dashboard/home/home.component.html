@@ -10,27 +10,28 @@
 
   <div class="loading" *ngIf="loading">Chargement...</div>
 
-  <!-- ==================== DASHBOARD CITIZEN ==================== -->
   <div *ngIf="isCitizen() && !loading">
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">📝</div>
         <div class="stat-content">
-          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <h3>{{ stats?.claims || 0 }}</h3>
           <p>Mes Réclamations en cours</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">✅</div>
         <div class="stat-content">
-          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <h3>{{ stats?.resolved || 0 }}</h3>
           <p>Réclamations résolues</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">🔔</div>
         <div class="stat-content">
-          <h3>3</h3>
+          <h3>{{ stats?.notifications || 0 }}</h3>
           <p>Notifications</p>
         </div>
       </div>
@@ -55,34 +56,36 @@
     </div>
   </div>
 
-  <!-- ==================== DASHBOARD AGENT ==================== -->
   <div *ngIf="isAgent() && !loading">
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">📋</div>
         <div class="stat-content">
-          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <h3>{{ stats?.claims || 0 }}</h3>
           <p>Réclamations Assignées</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">✅</div>
         <div class="stat-content">
-          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <h3>{{ stats?.resolved || 0 }}</h3>
           <p>Réclamations Traitées</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">⏱️</div>
         <div class="stat-content">
-          <h3>5</h3>
+          <h3>{{ (stats?.claims || 0) - (stats?.resolved || 0) }}</h3>
           <p>Tâches en cours</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">📊</div>
         <div class="stat-content">
-          <h3>92%</h3>
+          <h3>{{ stats?.performance || 0 }}%</h3>
           <p>Taux de Résolution</p>
         </div>
       </div>
@@ -107,34 +110,36 @@
     </div>
   </div>
 
-  <!-- ==================== DASHBOARD CHIEF ==================== -->
   <div *ngIf="isChief() && !loading">
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">📋</div>
         <div class="stat-content">
-          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <h3>{{ stats?.claims }}</h3>
           <p>Réclamations en cours</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">👥</div>
         <div class="stat-content">
-          <h3>{{ stats?.totalEmployees || 0 }}</h3>
+          <h3>{{ stats?.agents }}</h3>
           <p>Agents dans l'équipe</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">📈</div>
         <div class="stat-content">
-          <h3>85%</h3>
+          <h3>{{ stats?.teamPerformance }}%</h3>
           <p>Performance Équipe</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">✅</div>
         <div class="stat-content">
-          <h3>{{ stats?.resolvedClaims || 0 }}</h3>
+          <h3>{{ stats?.resolved }}</h3>
           <p>Réclamations Résolues</p>
         </div>
       </div>
@@ -163,44 +168,47 @@
     </div>
   </div>
 
-  <!-- ==================== DASHBOARD ADMIN ==================== -->
   <div *ngIf="isAdmin() && !loading">
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">👥</div>
         <div class="stat-content">
-          <h3>{{ stats?.totalEmployees || 0 }}</h3>
+          <h3>{{ stats?.users }}</h3>
           <p>Utilisateurs Total</p>
-          <span class="stat-detail">{{ stats?.activeEmployees || 0 }} actifs</span>
+          <span class="stat-detail">{{ (stats?.users * 0.8) | number:'1.0-0' }} actifs</span>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">💰</div>
         <div class="stat-content">
-          <h3>{{ stats?.totalBudget | number }}€</h3>
+          <h3>{{ stats?.budget | number }}€</h3>
           <p>Budget Total</p>
-          <span class="stat-detail">{{ stats?.spentBudget | number }}€ dépensé</span>
+          <span class="stat-detail">+10% ce mois</span>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">📝</div>
         <div class="stat-content">
-          <h3>{{ stats?.pendingClaims || 0 }}</h3>
+          <h3>{{ stats?.claims }}</h3>
           <p>Réclamations en cours</p>
-          <span class="stat-detail">{{ stats?.resolvedClaims || 0 }} résolues</span>
+          <span class="stat-detail">{{ stats?.resolved }} résolues</span>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">🏗️</div>
         <div class="stat-content">
-          <h3>{{ stats?.activeProjects || 0 }}</h3>
+          <h3>{{ stats?.projects }}</h3>
           <p>Projets Actifs</p>
         </div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-icon">📊</div>
         <div class="stat-content">
-          <h3>95%</h3>
+          <h3>{{ stats?.performance }}%</h3>
           <p>Performance Globale</p>
         </div>
       </div>

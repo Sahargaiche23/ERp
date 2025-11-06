@@ -56,8 +56,12 @@ public class Claim {
     @Column(length = 1000)
     private String resolution;
 
+    @Column(length = 2000)
+    private String response;
+
     public enum ClaimCategory {
-        INFRASTRUCTURE, SANITATION, LIGHTING, SECURITY, ADMINISTRATIVE, OTHER
+        INFRASTRUCTURE, SANITATION, LIGHTING, SECURITY, ADMINISTRATIVE, OTHER,
+        VOIRIE, ECLAIRAGE, PROPRETE, EAU, ESPACES_VERTS, SIGNALISATION, AUTRE
     }
 
     public enum ClaimPriority {
@@ -65,7 +69,8 @@ public class Claim {
     }
 
     public enum ClaimStatus {
-        NEW, IN_PROGRESS, RESOLVED, CLOSED, REJECTED
+        NEW, IN_PROGRESS, RESOLVED, CLOSED, REJECTED,
+        NOUVEAU, EN_COURS, RESOLU, REFUSE, EN_ATTENTE
     }
 
     @PrePersist
@@ -125,4 +130,7 @@ public class Claim {
     
     public String getResolution() { return resolution; }
     public void setResolution(String resolution) { this.resolution = resolution; }
+    
+    public String getResponse() { return response; }
+    public void setResponse(String response) { this.response = response; }
 }

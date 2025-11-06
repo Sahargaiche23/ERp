@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../services/claim.service';
+import { AuthService } from '../../services/auth.service';
 import { Claim, ClaimStats } from '../../models/claim.model';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-claims-list',
@@ -16,10 +18,15 @@ export class ClaimsListComponent implements OnInit {
   filterStatus = '';
   filterCategory = '';
   filterPriority = '';
+  currentUser: User | null = null;
 
-  constructor(private claimService: ClaimService) {}
+  constructor(
+    private claimService: ClaimService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
+    this.currentUser = this.authService.getCurrentUser();
     this.loadClaims();
     this.loadStats();
   }
@@ -27,14 +34,27 @@ export class ClaimsListComponent implements OnInit {
   loadClaims() {
     this.claimService.getClaims().subscribe({
       next: (data) => {
-        this.claims = data;
-        this.filteredClaims = data;
+        // FILTRE IMPORTANT: Si CITIZEN, voir SEULEMENT ses réclamations
+        if (this.isCitizen()) {
+          this.claims = data.filter(claim => 
+            claim.citizenEmail === this.currentUser?.email ||
+            claim.citizenName === this.currentUser?.username
+          );
+        } else {
+          // AGENT, CHIEF, ADMIN voient TOUTES les réclamations
+          this.claims = data;
+        }
+        this.filteredClaims = this.claims;
         this.loading = false;
       },
       error: () => {
         this.loading = false;
       }
     });
+  }
+
+  isCitizen(): boolean {
+    return this.currentUser?.role?.toUpperCase() === 'CITIZEN';
   }
 
   loadStats() {

@@ -82,6 +82,58 @@ public class ClaimController {
         return claimService.getStats();
     }
 
+    @PostMapping("/{id}/accept")
+    public ResponseEntity<Claim> acceptClaim(@PathVariable UUID id, @RequestBody Map<String, String> payload) {
+        return repo.findById(id).map(claim -> {
+            claim.setStatus(Claim.ClaimStatus.EN_COURS);
+            claim.setUpdatedAt(LocalDateTime.now());
+            if (payload.containsKey("assignedTo")) {
+                claim.setAssignedTo(payload.get("assignedTo"));
+            }
+            if (payload.containsKey("response")) {
+                claim.setResponse(payload.get("response"));
+            }
+            return ResponseEntity.ok(repo.save(claim));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<Claim> rejectClaim(@PathVariable UUID id, @RequestBody Map<String, String> payload) {
+        return repo.findById(id).map(claim -> {
+            claim.setStatus(Claim.ClaimStatus.REFUSE);
+            claim.setUpdatedAt(LocalDateTime.now());
+            if (payload.containsKey("response")) {
+                claim.setResponse(payload.get("response"));
+            }
+            return ResponseEntity.ok(repo.save(claim));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/respond")
+    public ResponseEntity<Claim> respondToClaim(@PathVariable UUID id, @RequestBody Map<String, String> payload) {
+        return repo.findById(id).map(claim -> {
+            claim.setResponse(payload.get("response"));
+            claim.setUpdatedAt(LocalDateTime.now());
+            return ResponseEntity.ok(repo.save(claim));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/resolve")
+    public ResponseEntity<Claim> resolveClaim(@PathVariable UUID id, @RequestBody Map<String, String> payload) {
+        return repo.findById(id).map(claim -> {
+            claim.setStatus(Claim.ClaimStatus.RESOLU);
+            claim.setResolvedAt(LocalDateTime.now());
+            claim.setUpdatedAt(LocalDateTime.now());
+            if (payload.containsKey("resolution")) {
+                claim.setResolution(payload.get("resolution"));
+            }
+            if (payload.containsKey("response")) {
+                claim.setResponse(payload.get("response"));
+            }
+            return ResponseEntity.ok(repo.save(claim));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         if (repo.existsById(id)) { repo.deleteById(id); return ResponseEntity.noContent().build(); }
